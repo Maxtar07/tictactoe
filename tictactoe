@@ -44,7 +44,7 @@ namespace TicTacToe
         {
           Console.Clear();
           Display(game);
-          Console.WriteLine("Félicitations vous avez gagné !");
+          Console.WriteLine("\nFélicitations vous avez gagné !");
           break;
         }
         Console.Clear();
@@ -53,7 +53,7 @@ namespace TicTacToe
         {
           Console.Clear();
           Display(game);
-          Console.WriteLine("Égalité");
+          Console.WriteLine("\nÉgalité");
           break;
         }
         Console.WriteLine("[IA] Je réflécis...");
@@ -61,13 +61,14 @@ namespace TicTacToe
         int ianumberchoice = random.Next(locations.Count);
         choice = locations[ianumberchoice];
         Console.WriteLine("[IA] Je joue en {0}",choice);
+        System.Threading.Thread.Sleep(1000);
         game[choice] = "O";
         locations.RemoveAt(ianumberchoice);
         if(Endgame(game, choice) == true)
         {
           Console.Clear();
           Display(game);
-          Console.WriteLine("C'est L'IA qui as gagnée !");
+          Console.WriteLine("\nC'est L'IA qui as gagnée !");
           break;
         }
       }
