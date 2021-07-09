@@ -1,0 +1,151 @@
+  using System;
+  using System.Collections.Generic;
+  using System.Linq;
+  using System.Threading;
+  using static System.Random;
+
+namespace TicTacToe
+{
+  class Program
+  {
+    static void Main(string[] args)
+    {
+      Dictionary<string, string> game = new Dictionary<string, string>(){
+        {"A1"," "},
+        {"A2"," "},
+        {"A3"," "},
+        {"B1"," "},
+        {"B2"," "},
+        {"B3"," "},
+        {"C1"," "},
+        {"C2"," "},
+        {"C3"," "},
+      };
+      List<string> locations = game.Keys.ToList();
+      //Console.WriteLine("Jeu du tic tac toe");
+      string choice;
+      Random random = new Random();
+      while(locations.Any())
+      {
+        Console.Clear();
+        Display(game);
+        while(true)
+        {
+          Console.WriteLine("\n[Joueur] Choisir un emplacement:");
+          choice = Console.ReadLine();
+          if(locations.Contains(choice))
+          {
+            break;
+          }
+        }
+        game[choice] = "X";
+        locations.Remove(choice);
+        if(Endgame(game, choice) == true)
+        {
+          Console.Clear();
+          Display(game);
+          Console.WriteLine("Félicitations vous avez gagné !");
+          break;
+        }
+        Console.Clear();
+        Display(game);
+        if(locations.Count == 0)
+        {
+          Console.Clear();
+          Display(game);
+          Console.WriteLine("Égalité");
+          break;
+        }
+        Console.WriteLine("[IA] Je réflécis...");
+        System.Threading.Thread.Sleep(1000);
+        int ianumberchoice = random.Next(locations.Count);
+        choice = locations[ianumberchoice];
+        Console.WriteLine("[IA] Je joue en {0}",choice);
+        game[choice] = "O";
+        locations.RemoveAt(ianumberchoice);
+        if(Endgame(game, choice) == true)
+        {
+          Console.Clear();
+          Display(game);
+          Console.WriteLine("C'est L'IA qui as gagnée !");
+          break;
+        }
+      }
+    }
+    static void Display(Dictionary<string, string> game)
+    {
+      List<string> lines = new List<string> {"A","B","C"};
+      List<string> columns = new List<string> {"1","2","3"};
+      string sep = "  +---+---+---+";
+      string coord;
+      Console.WriteLine("Jeu du tic tac toe");
+      Console.WriteLine("\n    {0}", string.Join("   ", columns));
+      for(int i = 0; i < 3; i++)
+      {
+        Console.WriteLine(sep);
+        Console.Write(lines[i]);
+        for(int j = 0; j < 3; j++)
+        {
+          coord = string.Concat(lines[i],columns[j]);
+          Console.Write(" |");
+          Console.Write(" ");
+          Console.Write(game[coord]);
+        }
+        Console.WriteLine(" |");
+      }
+      Console.Write(sep);
+      Console.Write("\n");
+    }
+    static bool CountMarks(Dictionary<string, string> game, string symbole, List<string> l)
+    {
+      int marksCount = 0;
+      foreach(string coord in l)
+      {
+        if(game[coord] == symbole)
+        {
+          marksCount++;
+        }
+      }
+      if(marksCount == 3)
+      {
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+    }
+    static bool Endgame(Dictionary<string, string> game, string choice)
+    {
+      string symbole = game[choice];
+
+      List<string> lines = new List<string> {"A","B","C"};
+      List<string> columns = new List<string> {"1","2","3"};
+      char l = choice.First();
+      char c = choice.Last();
+
+      List<string> line = new List<string> {};
+      List<string> col = new List<string> {};
+      foreach(var element in columns)
+      {
+        line.Add(string.Concat(l,element));
+      }
+      foreach(var elem in lines)
+      {
+        col.Add(string.Concat(elem,c));
+      }
+      List<string> diag1 = new List<string> {"A1","B2","C3"};
+      List<string> diag2 = new List<string> {"A3","B2","C1"};
+
+      if(CountMarks(game, symbole, line) || CountMarks(game, symbole, col) || CountMarks(game, symbole, diag1) || CountMarks(game, symbole, diag2) == true)
+      {
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+    }
+  }
+
+}
